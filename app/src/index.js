@@ -41,7 +41,11 @@ const App = {
 
   // Implement Task 4 Modify the front end of the DAPP
   lookUp: async function (){
-    
+    const { lookUptokenIdToStarInfo } = this.meta.methods;
+    const id = document.getElementById("lookid").value;
+    const starName = await lookUptokenIdToStarInfo(id).call();
+    console.log(starName);
+    App.setStatus(`Star Info: {id: ${id}, name: ${starName}}`);
   }
 
 };
@@ -54,9 +58,9 @@ window.addEventListener("load", async function() {
     App.web3 = new Web3(window.ethereum);
     await window.ethereum.enable(); // get permission to access accounts
   } else {
-    console.warn("No web3 detected. Falling back to http://127.0.0.1:9545. You should remove this fallback when you deploy live",);
+    console.warn("No web3 detected. Falling back to http://127.0.0.1:8545. You should remove this fallback when you deploy live",);
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    App.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:9545"),);
+    App.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"),);
   }
 
   App.start();
