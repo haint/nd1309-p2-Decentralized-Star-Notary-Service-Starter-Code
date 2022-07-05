@@ -1,22 +1,25 @@
 const StarNotary = artifacts.require("StarNotary");
 
-var accounts;
-var owner;
+let accounts;
+let owner;
+let instance;
 
 contract('StarNotary', (accs) => {
     accounts = accs;
     owner = accounts[0];
 });
 
+before(async () => {
+    instance = await StarNotary.deployed();
+});
+
 it('can Create a Star', async() => {
     let tokenId = 1;
-    let instance = await StarNotary.deployed();
     await instance.createStar('Awesome Star!', tokenId, {from: accounts[0]})
     assert.equal(await instance.tokenIdToStarInfo.call(tokenId), 'Awesome Star!')
 });
 
 it('lets user1 put up their star for sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let starId = 2;
     let starPrice = web3.utils.toWei(".01", "ether");
@@ -26,7 +29,6 @@ it('lets user1 put up their star for sale', async() => {
 });
 
 it('lets user1 get the funds after the sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 3;
@@ -43,7 +45,6 @@ it('lets user1 get the funds after the sale', async() => {
 });
 
 it('lets user2 buy a star, if it is put up for sale', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 4;
@@ -57,7 +58,6 @@ it('lets user2 buy a star, if it is put up for sale', async() => {
 });
 
 it('lets user2 buy a star and decreases its balance in ether', async() => {
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId = 5;
@@ -78,7 +78,6 @@ it('lets user2 buy a star and decreases its balance in ether', async() => {
 it('can add the star name and star symbol properly', async() => {
     // 1. create a Star with different tokenId
     let tokenId = 6;
-    let instance = await StarNotary.deployed();
     await instance.createStar('Udacity Star Notary', tokenId, {from: accounts[0]});
     await instance.addSymbol(tokenId, 'USN');
     //2. Call the name and symbol properties in your Smart Contract and compare with the name and symbol provided
@@ -88,7 +87,6 @@ it('can add the star name and star symbol properly', async() => {
 
 it('lets 2 users exchange stars', async() => {
     // 1. create 2 Stars with different tokenId
-    let instance = await StarNotary.deployed();
     let user1 = accounts[1];
     let user2 = accounts[2];
     let starId1 = 7;
@@ -108,7 +106,6 @@ it('lets 2 users exchange stars', async() => {
 it('lets a user transfer a star', async() => {
     // 1. create a Star with different tokenId
     let tokenId = 9;
-    let instance = await StarNotary.deployed();
     await instance.createStar('Udacity Star Notary', tokenId, {from: accounts[0]});
     // 2. use the transferStar function implemented in the Smart Contract
     let user1 = accounts[1];
@@ -120,7 +117,6 @@ it('lets a user transfer a star', async() => {
 it('lookUptokenIdToStarInfo test', async() => {
     // 1. create a Star with different tokenId
     let tokenId = 10;
-    let instance = await StarNotary.deployed();
     await instance.createStar('Udacity Star Notary', tokenId, {from: accounts[0]});
     // 2. Call your method lookUptokenIdToStarInfo
     const starName = await instance.lookUptokenIdToStarInfo(tokenId);
